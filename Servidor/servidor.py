@@ -34,9 +34,9 @@ def bajarDatos(username, libro, tamfragmento, fragmento, centinela):
 
 def actReportes(option, clientName, bookName):
 	file = open(nameFileStatics, 'r')
-	statistics = file.readlines()
-	books      = literal_eval(statistics[0])
-	clients    = literal_eval(statistics[1])
+	reportes = file.readlines()
+	books      = literal_eval(reportes[0])
+	clients    = literal_eval(reportes[1])
 	file.close()
 	if (option == 0):
 		currentDownloads[clientName].remove(bookName)
@@ -97,7 +97,7 @@ class Server:
 			print(book)
 
 	# Muestra las estadisticas segun la opcion elegida
-	def showStatistics(self, option):
+	def verReportes(self, option):
 		if (option == '1'):
 			for client in currentDownloads:
 				print(client)
@@ -105,8 +105,8 @@ class Server:
 					print("\t" + book)
 		else:
 			file = open(nameFileStatics, 'r')
-			statistics  = file.readlines()
-			data = literal_eval(statistics[int(option)-2])
+			reportes  = file.readlines()
+			data = literal_eval(reportes[int(option)-2])
 			elements = [(data[name], name) for name in data]
 			elements.sort(reverse = True)
 			x = 1
@@ -124,9 +124,9 @@ class Server:
 				print("Opcion invalida, intente de nuevo.")
 				continue
 			if  (option == '1'):
-				self.showStatistics(option)
+				self.verReportes(option)
 			else:
-				self.showStatistics(option)
+				self.verReportes(option)
 
 
 class DownloadServer(threading.Thread):
