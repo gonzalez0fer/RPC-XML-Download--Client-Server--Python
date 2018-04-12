@@ -7,17 +7,13 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 from ast import *
 
 nameFile = 'reportesCentral.txt'
-messages = [ "1. Libros solicitados por servidor de descarga.",
-			 "2. Numero de clientes atendidos por servidor de descarga.",
-			 "3. Servidores de descarga que se han caido." ]
+
 
 def autenticarCliente(username):
-	# REGION CRITICA
 	usuarios.append(username)
 	return "ok"
 
 def registerServer(server):
-	# REGION CRITICA
 	servidores.append(server)
 	return "ok"
 
@@ -79,8 +75,7 @@ def pedirLibro(username, libro):
 	return availableServers
 
 
-# Clase del servidor Central que escucha las peticiones
-# (con hilos)
+
 class CentralServer(threading.Thread):
 	def run(self):
 		server  = SimpleXMLRPCServer(("localhost", 8000))
@@ -94,7 +89,6 @@ class CentralServer(threading.Thread):
 
 
 class Informe():
-	# Muestra las estadisticas segun la opcion elegida
 	def verReportes(self, option):
 		file = open(nameFile, 'r')
 		reportes  = file.readlines()
@@ -110,7 +104,6 @@ class Informe():
 		print()
 		file.close()
 
-	# Interaccion del servidor central
 	def run(self):
 		while (True):
 			print("Elija un opcion: \n 1 ==> Libros X Servidor. \n 2 ==> Usuarios X Servidor \n 3 ==> Servidores de descarga que se han caido. \n")
