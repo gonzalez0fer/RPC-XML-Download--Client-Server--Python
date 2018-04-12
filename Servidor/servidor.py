@@ -10,8 +10,8 @@ from ast import literal_eval
 
 class AsyncXMLRPCServer(SocketServer.ThreadingMixIn,SimpleXMLRPCServer): pass
 
-centralServerDir = "http://localhost:8000"
-serverDir = "http://localhost:8121"
+domainCentralServer = "http://localhost:8000"
+domainServer = "http://localhost:8121"
 nameFileStatics = "reportes.txt"
 
 currentDownloads = {}
@@ -46,8 +46,8 @@ def actReportes(option, clientName, bookName):
 			books[bookName] = 0
 		books[bookName] = books[bookName] + 1
 		try:
-			centralServer = ServerProxy(centralServerDir)
-			centralServer.actReportes(0, serverDir, bookName)
+			centralServer = ServerProxy(domainCentralServer)
+			centralServer.actReportes(0, domainServer, bookName)
 		except:
 			print("No se logro establecer conexion con el servidor central.")
 	else:
@@ -83,20 +83,10 @@ def ComprobarLibro(libro):
 			return True
 	return False
 
-class DownloadServer(threading.Thread):
-	def run(self):
-		server = AsyncXMLRPCServer(("localhost", 8121), SimpleXMLRPCRequestHandler)
-		server.register_function(ComprobarLibro,    "ComprobarLibro")
-		server.register_function(bajarDatos, "bajarDatos")
-		server.register_function(ListaLibros,    "ListaLibros")
-		server.register_function(tamLibro,     "tamLibro")
-		server.register_function(actReportes, "actReportes")
-		server.serve_forever()
-
 class Server:
-	def __init__(self, central = centralServerDir, server = serverDir):
-		self.proxy = ServerProxy(centralServerDir)
-		self.proxy.registerServer(serverDir)
+	def __init__(self, central = domainCentralServer, server = domainServer):
+		self.proxy = ServerProxy(domainCentralServer)
+		self.proxy.registerServer(domainServer)
 		self.downloadServer = DownloadServer()
 		self.downloadServer.start()
 		self.libros = cargarListaLibros()
@@ -137,6 +127,19 @@ class Server:
 				self.showStatistics(option)
 			else:
 				self.showStatistics(option)
+                
+
+class DownloadServer(threading.Thread):
+	def run(self):
+		server = AsyncXMLRPCServer(("localhost", 8121), SimpleXMLRPCRequestHandler)
+		server.register_function(ComprobarLibro,    "ComprobarLibro")
+		server.register_function(bajarDatos, "bajarDatos")
+		server.register_function(ListaLibros,    "ListaLibros")
+		server.register_function(tamLibro,     "tamLibro")
+		server.register_function(actReportes, "actReportes")
+		server.serve_forever()
+
+    
 
 if __name__ == '__main__':
 	server = Server()
