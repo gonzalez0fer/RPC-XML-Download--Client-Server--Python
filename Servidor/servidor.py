@@ -32,26 +32,25 @@ def ComprobarLibro(libro):
 			return True
 	return False
 
-def tamLibro(book):
-	path = "Repositorio/" + book + ".pdf"
-	print(path)
-	return stat(path).st_size
+def tamLibro(libro):
+	ruta = "Repositorio/" + libro + ".pdf"
+	print(ruta)
+	return stat(ruta).st_size
 
-def transferData(client, book, chunkSize, actualChunk, isLast):
-	# HACER HILOS PROBABLEMENTE
-	if (not client in currentDownloads):
-		currentDownloads[client] = []
-	currentDownloads[client].append(book)	
-	print("Transfiriendo data...")
-	path = "Repositorio/" + book + ".pdf"
-	file = open(path, "rb")
-	file.read(chunkSize * (actualChunk - 1))
-	if (isLast):
-		f = file.read()
+def bajarDatos(username, libro, tamfragmento, fragmento, centinela):
+	if (not username in currentDownloads):
+		currentDownloads[username] = []
+	currentDownloads[username].append(libro)	
+	print("Enviando libro...")
+	ruta = "Repositorio/" + libro + ".pdf"
+	file = open(ruta, "rb")
+	file.read(tamfragmento * (fragmento - 1))
+	if (centinela):
+		aux = file.read()
 	else:
-		f = file.read(chunkSize)
+		aux = file.read(tamfragmento)
 	file.close()
-	return Binary(f)
+	return Binary(aux)
 
 def ListaLibros():
 	return server.libros
@@ -89,7 +88,7 @@ class DownloadServer(threading.Thread):
 	def run(self):
 		server = AsyncXMLRPCServer(("localhost", 8121), SimpleXMLRPCRequestHandler)
 		server.register_function(ComprobarLibro,    "ComprobarLibro")
-		server.register_function(transferData, "transferData")
+		server.register_function(bajarDatos, "bajarDatos")
 		server.register_function(ListaLibros,    "ListaLibros")
 		server.register_function(tamLibro,     "tamLibro")
 		server.register_function(actReportes, "actReportes")

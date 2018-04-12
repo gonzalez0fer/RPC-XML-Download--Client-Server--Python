@@ -61,7 +61,7 @@ class Cliente:
 					servidorInt = servidorInt + 1
 					sleep(3)
 			rutaDescargas = "Descargas/" + libro + ".pdf"
-			downloadFile = open(rutaDescargas,'wb')
+			ArchivoDescarga = open(rutaDescargas,'wb')
 			tamfragmento = tamLibro/numServidores
 			intentos = 0
 			servidorInt = 0
@@ -72,8 +72,8 @@ class Cliente:
 					if (intentos < numServidores):
 						if (servidorInt < 3):
 							ServidorDescarga = ServerProxy(estaServidores[aux])
-							paquete = ServidorDescarga.transferData(self.username, libro, tamfragmento, fragmento, fragmento==numServidores)
-							downloadFile.write(paquete.data)
+							paquete = ServidorDescarga.bajarDatos(self.username, libro, tamfragmento, fragmento, fragmento==numServidores)
+							ArchivoDescarga.write(paquete.data)
 							ServidorDescarga.actReportes(0,self.username, libro)
 							ServidorDescarga.actReportes(1,self.username, libro)
 							fragmento = fragmento + 1
@@ -91,7 +91,7 @@ class Cliente:
 				except:
 					servidorInt = servidorInt + 1
 					sleep(1)
-			downloadFile.close()
+			ArchivoDescarga.close()
 			if (auxBool):
 				print(libro + " ha sido descargado satisfactoriamente. Disfrutelo!!!")
 			else:
