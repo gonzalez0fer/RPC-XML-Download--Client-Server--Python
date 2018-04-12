@@ -8,8 +8,10 @@ import SocketServer
 from os import stat,walk
 from ast import literal_eval
 domainCentralServer = "http://localhost:8123"
-domainServer = "http://localhost:8131"
+domainServer = "http://localhost:8141"
 nameFileStatics = "reportes.txt"
+#class AsyncXMLRPCServer(SocketServer.ThreadingMixIn,SimpleXMLRPCServer): pass
+
 
 
 currentDownloads = {}
@@ -128,7 +130,8 @@ class Server:
 
 class DownloadServer(threading.Thread):
 	def run(self):
-		server = SimpleXMLRPCServer(("localhost", 8131))
+		#server = AsyncXMLRPCServer(("localhost", 8121), SimpleXMLRPCRequestHandler)
+		server = SimpleXMLRPCServer(("localhost", 8141))
 		server.register_function(ComprobarLibro,    "ComprobarLibro")
 		server.register_function(bajarDatos, "bajarDatos")
 		server.register_function(ListaLibros,    "ListaLibros")

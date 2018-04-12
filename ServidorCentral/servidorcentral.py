@@ -9,13 +9,7 @@ from ast import *
 nameFile = 'reportesCentral.txt'
 
 
-def autenticarCliente(username):
-	usuarios.append(username)
-	return "ok"
 
-def registerServer(server):
-	servidores.append(server)
-	return "ok"
 
 def librosXservidor():
 	print("Client is in serversBooks")
@@ -33,7 +27,7 @@ def listaServidores():
 	return servidores
 
 
-def actReportes(option, server, book = ""):
+def actReportes(aux, server, book = ""):
 
 	file = open(nameFile, 'r')
 	reportes    = file.readlines()
@@ -41,7 +35,7 @@ def actReportes(option, server, book = ""):
 	serverClients = literal_eval(reportes[1])
 	downServers   = literal_eval(reportes[2])
 	file.close()
-	if (option == 0):
+	if (aux == 0):
 		if (not server in serverBooks):
 			serverBooks[server] = {}
 		if (not book in serverBooks[server]):
@@ -59,7 +53,12 @@ def actReportes(option, server, book = ""):
 	file.write(str(serverClients) + '\n')
 	file.write(str(downServers)   + '\n')
 	file.close()
-	return "ACK"
+	return "ok"
+
+def autenticarCliente(username):
+	usuarios.append(username)
+	return "true"
+
 
 def pedirLibro(username, libro):
 	print("el usuario: " + str(username) + " esta por descargar...")
@@ -74,13 +73,16 @@ def pedirLibro(username, libro):
 			continue
 	return availableServers
 
+def autenticarRegistro(server):
+	servidores.append(server)
+	return "true"
 
 
 class CentralServer(threading.Thread):
 	def run(self):
-		server  = SimpleXMLRPCServer(("localhost", 8000))
+		server  = SimpleXMLRPCServer(("localhost", 8123))
 		server.register_function(autenticarCliente,"autenticarCliente")
-		server.register_function(registerServer,   "registerServer")
+		server.register_function(autenticarRegistro,   "autenticarRegistro")
 		server.register_function(pedirLibro,      "pedirLibro")
 		server.register_function(actReportes, "actReportes")
 		server.register_function(listaServidores,   "listaServidores")
@@ -89,29 +91,29 @@ class CentralServer(threading.Thread):
 
 
 class Informe():
-	def verReportes(self, option):
+	def verReportes(self, aux):
 		file = open(nameFile, 'r')
 		reportes  = file.readlines()
-		data = literal_eval(reportes[int(option)-1])
-		if (option == '1'):
+		data = literal_eval(reportes[int(aux)-1])
+		if (aux == '1'):
 			for server in data:
 				print(server + ":")
-				for book in data[server]:
-					print("\t" + book + ": " + str(data[server][book]))
+				for libro in data[server]:
+					print("\t ===> " + libro + ": " + str(data[server][libro]))
 		else:
 			for server in data:
-				print(server + ": " + str(data[server]))
+				print("===> " + server + ": " + str(data[server]))
 		print()
 		file.close()
 
 	def run(self):
 		while (True):
-			print("Elija un opcion: \n 1 ==> Libros X Servidor. \n 2 ==> Usuarios X Servidor \n 3 ==> Servidores de descarga que se han caido. \n")
-			option = raw_input()
-			if (not (option == '1' or option == '2' or option == '3')):
+			print("Escoja una opcion: \n 1 ==> Libros X Servidor. \n 2 ==> Usuarios X Servidor \n 3 ==> Servidores de descarga que se han caido. \n")
+			aux = raw_input()
+			if (not (aux == '1' or aux == '2' or aux == '3')):
 				print("Opcion invalida")
 				continue
-			self.verReportes(option)
+			self.verReportes(aux)
 
 if __name__ == '__main__':
 	informe = Informe()

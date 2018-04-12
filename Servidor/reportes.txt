@@ -1,2 +1,2 @@
-{'tp': 15}
-{'g': 1, 'fernando': 2, 'alan': 1, 's': 3, 'gato': 1, 'fer': 5, 'rata': 1, 'tadeo': 1}
+{'A': 2}
+{'jose': 1, 'fer': 1}
