@@ -7,12 +7,12 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer,SimpleXMLRPCRequestHandler
 import SocketServer
 from os import stat,walk
 from ast import literal_eval
-
-class AsyncXMLRPCServer(SocketServer.ThreadingMixIn,SimpleXMLRPCServer): pass
-
 domainCentralServer = "http://localhost:8000"
 domainServer = "http://localhost:8121"
 nameFileStatics = "reportes.txt"
+#class AsyncXMLRPCServer(SocketServer.ThreadingMixIn,SimpleXMLRPCServer): pass
+
+
 
 currentDownloads = {}
 
@@ -127,11 +127,12 @@ class Server:
 				self.showStatistics(option)
 			else:
 				self.showStatistics(option)
-                
+
 
 class DownloadServer(threading.Thread):
 	def run(self):
-		server = AsyncXMLRPCServer(("localhost", 8121), SimpleXMLRPCRequestHandler)
+		#server = AsyncXMLRPCServer(("localhost", 8121), SimpleXMLRPCRequestHandler)
+		server = SimpleXMLRPCServer(("localhost", 8121))
 		server.register_function(ComprobarLibro,    "ComprobarLibro")
 		server.register_function(bajarDatos, "bajarDatos")
 		server.register_function(ListaLibros,    "ListaLibros")
