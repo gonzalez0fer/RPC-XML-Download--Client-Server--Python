@@ -18,23 +18,23 @@ def autenticarCliente(username):
 
 def registerServer(server):
 	# REGION CRITICA
-	servers.append(server)
+	servidores.append(server)
 	return "ok"
 
 def librosXservidor():
 	print("Client is in serversBooks")
-	allBooks = []
-	for server in servers:
+	listaLibros = []
+	for server in servidores:
 		try:
 			proxy = xmlrpclib.ServerProxy(server)
-			books = proxy.booksList()
-			allBooks.append(books)
+			libros = proxy.ListaLibros()
+			listaLibros.append(libros)
 		except:
-			allBooks.append([])
-	return allBooks
+			listaLibros.append([])
+	return listaLibros
 
 def listaServidores():
-	return servers
+	return servidores
 
 # Tipos de updates:
 # 0 -> Se solicitud un libro a un servidor
@@ -72,7 +72,7 @@ def pedirLibro(clientName, book):
 	# CREO QUE TENEMOS QUE PONER ESTO EN UN HILO PARA QUE SEA CONCURRENTE
 	print("Client: " + str(clientName) + " is resquesting a book")
 	availableServers = []
-	for server in servers:
+	for server in servidores:
 		try:
 			proxy = xmlrpclib.ServerProxy(server)
 			print(proxy)
@@ -130,7 +130,7 @@ class Summary():
 if __name__ == '__main__':
 	summary = Summary()
 	usuarios = []
-	servers = []
+	servidores = []
 	centralServer = CentralServer(name = "server")
 	centralServer.start()
 	summary.run()

@@ -18,17 +18,17 @@ messages = [ "1. Libros en descarga.",
 			 "3. Estadisticas de clientes." ]
 currentDownloads = {}
 
-def uploadBookList():
-	books = []
+def cargarListaLibros():
+	libros = []
 	for root,dir,file in walk("Repositorio"):
 		for f in file:
-			books.append(f.split('.')[0])
-	return books
+			libros.append(f.split('.')[0])
+	return libros
 
 def checkBook(book):
 	# HACER HILOS PROBABLEMENTE
 	print("checking book in server")
-	for b in server.books:
+	for b in server.libros:
 		if (b == book):
 			return True
 	return False
@@ -54,8 +54,8 @@ def transferData(client, book, chunkSize, actualChunk, isLast):
 	file.close()
 	return Binary(f)
 
-def booksList():
-	return server.books
+def ListaLibros():
+	return server.libros
 
 def actReportes(option, clientName, bookName):
 	# REGION CRITICA
@@ -91,7 +91,7 @@ class DownloadServer(threading.Thread):
 		server = AsyncXMLRPCServer(("localhost", 8121), SimpleXMLRPCRequestHandler)
 		server.register_function(checkBook,    "checkBook")
 		server.register_function(transferData, "transferData")
-		server.register_function(booksList,    "booksList")
+		server.register_function(ListaLibros,    "ListaLibros")
 		server.register_function(tamLibro,     "tamLibro")
 		server.register_function(actReportes, "actReportes")
 		server.serve_forever()
@@ -102,11 +102,11 @@ class Server:
 		self.proxy.registerServer(serverDir)
 		self.downloadServer = DownloadServer()
 		self.downloadServer.start()
-		self.books = uploadBookList()
+		self.libros = cargarListaLibros()
 
 	def printBooks(self):
 		print("Los libros disponibles son: ")
-		for book in self.books:
+		for book in self.libros:
 			print(book)
 
 	# Muestra las estadisticas segun la opcion elegida
