@@ -40,10 +40,10 @@ def listaServidores():
 def actReportes(option, server, book = ""):
 
 	file = open(nameFile, 'r')
-	statistics    = file.readlines()
-	serverBooks   = literal_eval(statistics[0])
-	serverClients = literal_eval(statistics[1])
-	downServers   = literal_eval(statistics[2])
+	reportes    = file.readlines()
+	serverBooks   = literal_eval(reportes[0])
+	serverClients = literal_eval(reportes[1])
+	downServers   = literal_eval(reportes[2])
 	file.close()
 	if (option == 0):
 		if (not server in serverBooks):
@@ -93,12 +93,12 @@ class CentralServer(threading.Thread):
 		server.serve_forever()
 
 
-class Summary():
+class Informe():
 	# Muestra las estadisticas segun la opcion elegida
-	def showStatistics(self, option):
+	def verReportes(self, option):
 		file = open(nameFile, 'r')
-		statistics  = file.readlines()
-		data = literal_eval(statistics[int(option)-1])
+		reportes  = file.readlines()
+		data = literal_eval(reportes[int(option)-1])
 		if (option == '1'):
 			for server in data:
 				print(server + ":")
@@ -118,12 +118,12 @@ class Summary():
 			if (not (option == '1' or option == '2' or option == '3')):
 				print("Opcion invalida")
 				continue
-			self.showStatistics(option)
+			self.verReportes(option)
 
 if __name__ == '__main__':
-	summary = Summary()
+	informe = Informe()
 	usuarios = []
 	servidores = []
 	centralServer = CentralServer(name = "server")
 	centralServer.start()
-	summary.run()
+	informe.run()
