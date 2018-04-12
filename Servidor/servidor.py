@@ -16,25 +16,6 @@ nameFileStatics = "reportes.txt"
 
 currentDownloads = {}
 
-def cargarListaLibros():
-	libros = []
-	for root,dir,file in walk("Repositorio"):
-		for f in file:
-			libros.append(f.split('.')[0])
-	return libros
-
-def ComprobarLibro(libro):
-	print("comprobando libro...")
-	for aux in server.libros:
-		if (aux == libro):
-			return True
-	return False
-
-def tamLibro(libro):
-	ruta = "Repositorio/" + libro + ".pdf"
-	print(ruta)
-	return stat(ruta).st_size
-
 def bajarDatos(username, libro, tamfragmento, fragmento, centinela):
 	if (not username in currentDownloads):
 		currentDownloads[username] = []
@@ -50,8 +31,6 @@ def bajarDatos(username, libro, tamfragmento, fragmento, centinela):
 	file.close()
 	return Binary(aux)
 
-def ListaLibros():
-	return server.libros
 
 def actReportes(option, clientName, bookName):
 	file = open(nameFileStatics, 'r')
@@ -80,6 +59,29 @@ def actReportes(option, clientName, bookName):
 	file.write(str(clients) + '\n')
 	file.close()
 	return "ACK"
+
+def ListaLibros():
+	return server.libros
+
+def cargarListaLibros():
+	libros = []
+	for root,dir,file in walk("Repositorio"):
+		for f in file:
+			libros.append(f.split('.')[0])
+	return libros
+
+def tamLibro(libro):
+	ruta = "Repositorio/" + libro + ".pdf"
+	print(ruta)
+	return stat(ruta).st_size
+
+
+def ComprobarLibro(libro):
+	print("comprobando libro...")
+	for aux in server.libros:
+		if (aux == libro):
+			return True
+	return False
 
 class DownloadServer(threading.Thread):
 	def run(self):
