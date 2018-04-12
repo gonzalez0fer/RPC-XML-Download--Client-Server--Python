@@ -113,7 +113,7 @@ class Cliente:
 			if (aux == '1'):
 				self.listarLibros()
 			elif(aux == '2'):
-				requerimiento = raw_input("Escriba el nombre del libro: ")
+				requerimiento = raw_input("Que libro desea?: \n")
 				start_new_thread(self.descargarLibro,(nombre,requerimiento,))
 
 

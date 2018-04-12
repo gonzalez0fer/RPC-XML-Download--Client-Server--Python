@@ -12,10 +12,8 @@ class AsyncXMLRPCServer(SocketServer.ThreadingMixIn,SimpleXMLRPCServer): pass
 
 centralServerDir = "http://localhost:8000"
 serverDir = "http://localhost:8121"
-nameFileStatics = "statistics.txt"
-messages = [ "1. Libros en descarga.",
-			 "2. Libros descargados.",
-			 "3. Estadisticas de clientes." ]
+nameFileStatics = "reportes.txt"
+
 currentDownloads = {}
 
 def cargarListaLibros():
@@ -56,7 +54,6 @@ def ListaLibros():
 	return server.libros
 
 def actReportes(option, clientName, bookName):
-	# REGION CRITICA
 	file = open(nameFileStatics, 'r')
 	statistics = file.readlines()
 	books      = literal_eval(statistics[0])
@@ -129,13 +126,10 @@ class Server:
 
 	def run(self):
 		while (True):
-			print("Elija un opcion: ")
-			for message in messages:
-				print(message)
-			print()
+			print("Elija un opcion: \n 1 ==> Libros en proceso. \n 2 ==> Libros bajados. \n 3 ==> Reportes de usuarios.\n")
 			option = raw_input()
 			if ( not (option == '1' or option == '2' or option == '3')):
-				print("Opcion invalida")
+				print("Opcion invalida, intente de nuevo.")
 				continue
 			if  (option == '1'):
 				self.showStatistics(option)

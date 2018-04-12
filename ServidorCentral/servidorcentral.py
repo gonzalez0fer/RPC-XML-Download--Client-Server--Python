@@ -6,7 +6,7 @@ import xmlrpclib
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from ast import *
 
-nameFile = 'statistics.txt'
+nameFile = 'reportesCentral.txt'
 messages = [ "1. Libros solicitados por servidor de descarga.",
 			 "2. Numero de clientes atendidos por servidor de descarga.",
 			 "3. Servidores de descarga que se han caido." ]
@@ -36,12 +36,9 @@ def librosXservidor():
 def listaServidores():
 	return servidores
 
-# Tipos de updates:
-# 0 -> Se solicitud un libro a un servidor
-# 1 -> Un servidor atendio a un cliente
-# 2 -> Se callo un servidor
+
 def actReportes(option, server, book = ""):
-	# REGION CRITICA
+
 	file = open(nameFile, 'r')
 	statistics    = file.readlines()
 	serverBooks   = literal_eval(statistics[0])
@@ -116,10 +113,7 @@ class Summary():
 	# Interaccion del servidor central
 	def run(self):
 		while (True):
-			print("Elija un opcion: ")
-			for message in messages:
-				print(message)
-			print()
+			print("Elija un opcion: \n 1 ==> Libros X Servidor. \n 2 ==> Usuarios X Servidor \n 3 ==> Servidores de descarga que se han caido. \n")
 			option = raw_input()
 			if (not (option == '1' or option == '2' or option == '3')):
 				print("Opcion invalida")
