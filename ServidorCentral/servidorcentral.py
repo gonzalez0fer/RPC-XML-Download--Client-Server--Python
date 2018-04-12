@@ -68,15 +68,14 @@ def actReportes(option, server, book = ""):
 	file.close()
 	return "ACK"
 
-def pedirLibro(clientName, book):
-	# CREO QUE TENEMOS QUE PONER ESTO EN UN HILO PARA QUE SEA CONCURRENTE
-	print("Client: " + str(clientName) + " is resquesting a book")
+def pedirLibro(username, libro):
+	print("el usuario: " + str(username) + " esta por descargar...")
 	availableServers = []
 	for server in servidores:
 		try:
 			proxy = xmlrpclib.ServerProxy(server)
 			print(proxy)
-			if (proxy.checkBook(book)):
+			if (proxy.ComprobarLibro(libro)):
 				availableServers.append(server)
 		except:
 			continue

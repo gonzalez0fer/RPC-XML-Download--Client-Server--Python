@@ -25,11 +25,10 @@ def cargarListaLibros():
 			libros.append(f.split('.')[0])
 	return libros
 
-def checkBook(book):
-	# HACER HILOS PROBABLEMENTE
-	print("checking book in server")
-	for b in server.libros:
-		if (b == book):
+def ComprobarLibro(libro):
+	print("comprobando libro...")
+	for aux in server.libros:
+		if (aux == libro):
 			return True
 	return False
 
@@ -89,7 +88,7 @@ def actReportes(option, clientName, bookName):
 class DownloadServer(threading.Thread):
 	def run(self):
 		server = AsyncXMLRPCServer(("localhost", 8121), SimpleXMLRPCRequestHandler)
-		server.register_function(checkBook,    "checkBook")
+		server.register_function(ComprobarLibro,    "ComprobarLibro")
 		server.register_function(transferData, "transferData")
 		server.register_function(ListaLibros,    "ListaLibros")
 		server.register_function(tamLibro,     "tamLibro")
