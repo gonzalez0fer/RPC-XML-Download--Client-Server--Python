@@ -5,55 +5,61 @@ import time
 import xmlrpclib
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from ast import *
-
-nameFile = 'reportesCentral.txt'
-
+archivoReporte = 'reportesCentral.txt'
 
 
 
+############################################################################################################
+# FUNCION LIBROSXSERVIDOR:
+#----------------------------------------------------------------------------------------------------------
+# ESTA FUNCION ES INVOCADA POR EL CLIENTE Y ARMA UNA LISTA DE LISTAS DE LOS LIBROS QUE SE ENCUENTRAN EN 
+# CADA UNO DE LOS SERVIDORES QUE SE ENCUENTRAN EN CONEXION CON EL SERVIDOR CENTRAL. DE ALGUNO DE ELLOS 
+# NO POSEER LIBROS, AGREGA UNA LISTA VACIA A LA LISTA DE LISTAS.
+#
 def librosXservidor():
-	print("Client is in serversBooks")
+	print("cargando informacion de libros...")
 	listaLibros = []
 	for server in servidores:
 		try:
-			proxy = xmlrpclib.ServerProxy(server)
-			libros = proxy.ListaLibros()
+			dominioServidor = xmlrpclib.ServerProxy(server)
+			libros = dominioServidor.ListaLibros()
 			listaLibros.append(libros)
 		except:
 			listaLibros.append([])
 	return listaLibros
 
+#FUNCION DE APOYO QUE RETORNA LOS OBJETOS DE TIPO SERVIDOR QUE SE ENCUENTRAN CONECTADOS A LA LISTA
 def listaServidores():
 	return servidores
 
 
-def actReportes(aux, server, book = ""):
+def actReportes(aux, servidor, libro = ""):
 
-	file = open(nameFile, 'r')
+	file = open(archivoReporte, 'r')
 	reportes    = file.readlines()
-	serverBooks   = literal_eval(reportes[0])
-	serverClients = literal_eval(reportes[1])
-	downServers   = literal_eval(reportes[2])
+	servidorLibros   = literal_eval(reportes[0])
+	clientesServidor = literal_eval(reportes[1])
+	servDescargas   = literal_eval(reportes[2])
 	file.close()
 	if (aux == 0):
-		if (not server in serverBooks):
-			serverBooks[server] = {}
-		if (not book in serverBooks[server]):
-			serverBooks[server][book] = 0
-		serverBooks[server][book] = serverBooks[server][book] + 1
-		if not (server in serverClients):
-			serverClients[server] = 0
-		serverClients[server] = serverClients[server] + 1
+		if (not servidor in servidorLibros):
+			servidorLibros[servidor] = {}
+		if (not libro in servidorLibros[servidor]):
+			servidorLibros[servidor][libro] = 0
+		servidorLibros[servidor][libro] = servidorLibros[servidor][libro] + 1
+		if not (servidor in clientesServidor):
+			clientesServidor[servidor] = 0
+		clientesServidor[servidor] = clientesServidor[servidor] + 1
 	else:
-		if not (server in downServers):
-			downServers[server] = 0
-		downServers[server] = downServers[server] + 1
-	file = open(nameFile, 'w')
-	file.write(str(serverBooks)   + '\n')
-	file.write(str(serverClients) + '\n')
-	file.write(str(downServers)   + '\n')
+		if not (servidor in servDescargas):
+			servDescargas[servidor] = 0
+		servDescargas[servidor] = servDescargas[servidor] + 1
+	file = open(archivoReporte, 'w')
+	file.write(str(servidorLibros)   + '\n')
+	file.write(str(clientesServidor) + '\n')
+	file.write(str(servDescargas)   + '\n')
 	file.close()
-	return "ok"
+	return "working..."
 
 def autenticarCliente(username):
 	usuarios.append(username)
@@ -92,7 +98,7 @@ class CentralServer(threading.Thread):
 
 class Informe():
 	def verReportes(self, aux):
-		file = open(nameFile, 'r')
+		file = open(archivoReporte, 'r')
 		reportes  = file.readlines()
 		data = literal_eval(reportes[int(aux)-1])
 		if (aux == '1'):

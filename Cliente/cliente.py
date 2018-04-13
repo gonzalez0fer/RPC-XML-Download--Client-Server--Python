@@ -69,7 +69,8 @@ class Cliente:
 #	INICIALIZACION. SE ENCARGA DE ENVIAR AMBOS DATOS AL SERVIDOR CENTRAL PARA QUE ESTE DETERMINE SI
 #	EL LIBRO SE ENCUENTRA EN ALGUNO D LOS SERVIDORES, SI ESTA DISPONIBLE INICIA LA DESCARGA DEL MISMO
 #	DESDE EL SERVIDOR QUE LO TIENE. DE NO TENER ACCESO A LOS SERVIDORES, LO NOTIFICA OPORTUNAMENTE AL
-# 	USUARIO.
+# 	USUARIO Y SOLICITA A LOS SERVIDORES QUE ACTUALICEN SUS DETERMINADOS ARCHIVOS DE REPORTE PARA AMBOS
+# 	CASOS.
 #  
 
 	def descargarLibro(self,name,libro):
@@ -150,7 +151,9 @@ class Cliente:
 ############################################################################################################
 #MAIN:
 #----------------------------------------------------------------------------------------------------------
-#	HACE LOS LLAMADOS DE LAS FUNCIONES PRIMORDIALES
+#	HACE LOS LLAMADOS DE LAS FUNCIONES PRIMORDIALES. SOLICITA EL NOMBRE DEL USUARIO Y CREA EL ELEMENTO 
+# 	DE TIPO CLIENTE Y LLAMA A LA FUNCION DE INICIALIZACION.
+#
 if __name__ == '__main__':
     nickname = raw_input("Bienvenido a nuestra libreria!!! "+"\n" + " Cual es su username?: ")
     user = Cliente(nickname)
