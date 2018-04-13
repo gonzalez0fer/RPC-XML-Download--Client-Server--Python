@@ -1,2 +1,2 @@
-{'A': 6}
-{'jose': 1, '0fer': 2, 'fer': 2, 'hola': 1}
+{'A': 10}
+{'jose': 1, '0fer': 3, 'hector': 1, 'fer': 2, 'johan': 2, 'hola': 1}

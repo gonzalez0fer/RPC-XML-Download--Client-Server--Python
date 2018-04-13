@@ -28,13 +28,21 @@ def librosXservidor():
 			listaLibros.append([])
 	return listaLibros
 
-#FUNCION DE APOYO QUE RETORNA LOS OBJETOS DE TIPO SERVIDOR QUE SE ENCUENTRAN CONECTADOS A LA LISTA
+# FUNCION DE APOYO QUE RETORNA LOS OBJETOS 
+# DE TIPO SERVIDOR QUE SE ENCUENTRAN 
+# CONECTADOS A LA LISTA.
 def listaServidores():
 	return servidores
 
-
+############################################################################################################
+# FUNCION ACTREPORTES:
+#----------------------------------------------------------------------------------------------------------	
+#	FUNCION QUE SE ENCARGA DE LA ACTUALIZACION DE LOS REPORTES ESTADITICOS, DICHOS REPORTES SE ALMACENAN
+#	EN UN ARCHIVO .TXT QUE POSEE TRES DICCIONARION EN LOS CUALES SE ALMACENAN, NUMERO DE DESCARGAS DE TITULOS 
+# 	POR SERVIDOR, CLIENTES QUE HAN CONSULTADO CADA SERVIDOR Y FINALMENTE CUANTAS VECES SE HA CAIDO CADA 
+# 	SERVIDOR DESDE LA ENTRADA EN FUNCIONAMIENTO.
+#  
 def actReportes(aux, servidor, libro = ""):
-
 	file = open(archivoReporte, 'r')
 	reportes    = file.readlines()
 	servidorLibros   = literal_eval(reportes[0])
@@ -61,29 +69,40 @@ def actReportes(aux, servidor, libro = ""):
 	file.close()
 	return "working..."
 
+# FUNCION DE APOYO QUE ALMACENA A LOS
+# USUARIOS EN UNA LISTA DEL OBJETO
+# TIPO SERVIDOR CENTRAL.
 def autenticarCliente(username):
 	usuarios.append(username)
 	return "true"
 
-
+############################################################################################################
+# FUNCION PEDIRLIBRO:
+#----------------------------------------------------------------------------------------------------------
+#	FUNCION EN LA CUAL SE LE RETORNA AL USUARIO LA LISTA DE LOS SERVIDORES QUE TIENEN AL LIBRO QUE 
+#	DESEA DESCARGAR
+#
 def pedirLibro(username, libro):
-	print("el usuario: " + str(username) + " esta por descargar...")
-	availableServers = []
+	print("el usuario: " + str(username) + " esta por descargar el libro "+ str(libro)+"...")
+	disponibleEn = []
 	for server in servidores:
 		try:
-			proxy = xmlrpclib.ServerProxy(server)
-			print(proxy)
-			if (proxy.ComprobarLibro(libro)):
-				availableServers.append(server)
+			servidor = xmlrpclib.ServerProxy(server)
+			print(servidor)
+			if (servidor.ComprobarLibro(libro)):
+				disponibleEn.append(server)
 		except:
 			continue
-	return availableServers
+	return disponibleEn
 
+# FUNCION DE APOYO QUE ALMACENA A LOS
+# SERVIDORES EN UNA LISTA DEL OBJETO
+# TIPO SERVIDOR CENTRAL.
 def autenticarRegistro(server):
 	servidores.append(server)
 	return "true"
 
-
+#CLASE QUE PERMITE HILAR LAS FUNCIONALIDADES DEL SERVIDOR CENTRAL
 class CentralServer(threading.Thread):
 	def run(self):
 		server  = SimpleXMLRPCServer(("localhost", 8123))
@@ -96,23 +115,36 @@ class CentralServer(threading.Thread):
 		server.serve_forever()
 
 
-class Informe():
+class AdmServid():
+
+############################################################################################################
+# FUNCION VERREPORTES:
+#----------------------------------------------------------------------------------------------------------	
+#	FUNCION QUE RETORNA AL ADMINISTRADOR DEL SERVIDOR LA INFORMACION RELATIVA A LAS DESCARGAS QUE SE HAN
+#	GESTIONADO POR MEDIO DE EL, TOMA UNA OPCION DEL ADMIN Y CONSULTA EN EL ARCHIVO QUE ALMACENA LOS 
+# 	DICCIONARIOS CON LA INFORMACION REQUERIDA.
+#
 	def verReportes(self, aux):
 		file = open(archivoReporte, 'r')
 		reportes  = file.readlines()
-		data = literal_eval(reportes[int(aux)-1])
+		info = literal_eval(reportes[int(aux)-1])
 		if (aux == '1'):
-			for server in data:
-				print(server + ":")
-				for libro in data[server]:
-					print("\t ===> " + libro + ": " + str(data[server][libro]))
+			for servidor in info:
+				print(servidor + ":")
+				for libro in info[servidor]:
+					print("\t ===> " + libro + ": " + str(info[servidor][libro]))
 		else:
-			for server in data:
-				print("===> " + server + ": " + str(data[server]))
-		print()
+			for servidor in info:
+				print("===> " + servidor + ": " + str(info[servidor]))
 		file.close()
 
-	def run(self):
+############################################################################################################
+# FUNCION INICIALIZAR:
+#----------------------------------------------------------------------------------------------------------
+#	FUNCION QUE INICIALIZA EL OBJETO ADMSERV, FUNCIONA COMO UN MENU EL CUAL GESTIONA LOS REQUERIMIENTOS DEL 
+#	ADMINISTRADOR DEL SERVIDOR CENTRAL PARA VER LOS REPORTES ESTADISTICOS DE LAS DIVERSAS DESCARGAS.
+#
+	def inicializar(self):
 		while (True):
 			print("Escoja una opcion: \n 1 ==> Libros X Servidor. \n 2 ==> Usuarios X Servidor \n 3 ==> Servidores de descarga que se han caido. \n")
 			aux = raw_input()
@@ -121,10 +153,17 @@ class Informe():
 				continue
 			self.verReportes(aux)
 
+############################################################################################################
+#MAIN:
+#----------------------------------------------------------------------------------------------------------
+#	HACE LOS LLAMADOS DE LAS FUNCIONES PRIMORDIALES.  CREA EL ELEMENTO DEL TIPO ADMINSER PARA VER LOS
+# 	DIVERSOS REPORTES, AUNADO A ESTO DE TIPO SERVIDORCENTRAL Y LLAMA A LAS FUNCIONES DE INICIALIZACION 
+# 	CORRESPONDIENTES.
+#
 if __name__ == '__main__':
-	informe = Informe()
+	adminSer = AdmServid()
 	usuarios = []
 	servidores = []
 	centralServer = CentralServer(name = "server")
 	centralServer.start()
-	informe.run()
+	adminSer.inicializar()
