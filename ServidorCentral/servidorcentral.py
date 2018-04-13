@@ -129,13 +129,19 @@ class AdmServid():
 		reportes  = file.readlines()
 		info = literal_eval(reportes[int(aux)-1])
 		if (aux == '1'):
+			print("LIBROS POR SERVIDOR:")
 			for servidor in info:
-				print(servidor + ":")
+				print("\n Servidor en el dominio: "+ servidor + ":")
 				for libro in info[servidor]:
-					print("\t ===> " + libro + ": " + str(info[servidor][libro]))
+					print("\t ===> " + libro + " == " + str(info[servidor][libro]))
+			print("\n")
+			
 		else:
+			print("\n")
 			for servidor in info:
-				print("===> " + servidor + ": " + str(info[servidor]))
+				print("===> " + servidor + " == " + str(info[servidor]))
+			print("\n")
+			
 		file.close()
 
 ############################################################################################################
@@ -157,8 +163,8 @@ class AdmServid():
 #MAIN:
 #----------------------------------------------------------------------------------------------------------
 #	HACE LOS LLAMADOS DE LAS FUNCIONES PRIMORDIALES.  CREA EL ELEMENTO DEL TIPO ADMINSER PARA VER LOS
-# 	DIVERSOS REPORTES, AUNADO A ESTO DE TIPO SERVIDORCENTRAL Y LLAMA A LAS FUNCIONES DE INICIALIZACION 
-# 	CORRESPONDIENTES.
+# 	DIVERSOS REPORTES, AUNADO A ESTO CREA OBJETO DE TIPO SERVIDORCENTRAL Y LLAMA A LAS FUNCIONES DE 
+# 	INICIALIZACION CORRESPONDIENTES.
 #
 if __name__ == '__main__':
 	adminSer = AdmServid()
